@@ -3,7 +3,7 @@
 # To re-generate a bundle for another specific version without changing the standard setup, you can:
 # - use the VERSION as arg of the bundle target (e.g make bundle VERSION=0.0.2)
 # - use environment variables to overwrite this value (e.g export VERSION=0.0.2)
-VERSION ?= 0.8.0
+VERSION ?= 0.7.2
 
 # CHANNELS define the bundle channels used in the bundle.
 # Add a new line here if you would like to change its default config. (E.g CHANNELS = "candidate,fast,stable")
@@ -287,4 +287,4 @@ deploy/parts/crd-falconnodesensors.yaml: bundle/manifests/falcon.crowdstrike.com
 	(echo "---"; sed -n '/^status:/q;p' $^ ) > $@
 
 deploy/falcon-operator.yaml: deploy/parts/ns.yaml deploy/parts/crd-falconcontainers.yaml deploy/parts/crd-falconnodesensors.yaml deploy/parts/role.yaml deploy/parts/service_account.yaml deploy/parts/role_binding.yaml deploy/parts/operator.yaml
-	cat $^ > $@
+	cat $^ | sed "s|$(IMG)|$(IMAGE_TAG_BASE):v$(VERSION)|" > $@
